@@ -15,52 +15,52 @@ import org.superbiz.moviefun.blobstore.BlobStore;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
-@Controller
+@RestController
 @RequestMapping("/albums")
 public class AlbumsController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final AlbumsBean albumsBean;
+    private static final Logger logger = LoggerFactory.getLogger(AlbumsController.class);
+    private final AlbumsRepository albumsRepository;
     private final BlobStore blobStore;
 
-    public AlbumsController(AlbumsBean albumsBean, BlobStore blobStore) {
-        this.albumsBean = albumsBean;
+    public AlbumsController(AlbumsRepository albumsRepository, BlobStore blobStore) {
+        this.albumsRepository = albumsRepository;
         this.blobStore = blobStore;
     }
 
 
     @GetMapping
-    public String index(Map<String, Object> model) {
-        model.put("albums", albumsBean.getAlbums());
-        return "albums";
+    public List<Album> listAll() {
+        return albumsRepository.getAlbums();
     }
 
     @GetMapping("/{albumId}")
-    public String details(@PathVariable long albumId, Map<String, Object> model) {
-        model.put("album", albumsBean.find(albumId));
-        return "albumDetails";
+    public Album getById(@PathVariable("albumId") long albumId) {
+        return albumsRepository.find(albumId);
+    }
+
+    @PostMapping
+    public void add(@RequestBody Album album) {
+        logger.debug("Creating new album: {}", album);
+        albumsRepository.addAlbum(album);
     }
 
     @PostMapping("/{albumId}/cover")
-    public String uploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) {
+    public void uploadCover(@PathVariable("albumId") Long albumId, @RequestParam("file") MultipartFile uploadedFile) {
         logger.debug("Uploading cover for album with id {}", albumId);
 
         if (uploadedFile.getSize() > 0) {
             try {
                 tryToUploadCover(albumId, uploadedFile);
-
             } catch (IOException e) {
                 logger.warn("Error while uploading album cover", e);
             }
         }
-
-        return format("redirect:/albums/%d", albumId);
     }
 
     @GetMapping("/{albumId}/cover")
@@ -80,9 +80,9 @@ public class AlbumsController {
 
     private void tryToUploadCover(@PathVariable Long albumId, @RequestParam("file") MultipartFile uploadedFile) throws IOException {
         Blob coverBlob = new Blob(
-            getCoverBlobName(albumId),
-            uploadedFile.getInputStream(),
-            uploadedFile.getContentType()
+                getCoverBlobName(albumId),
+                uploadedFile.getInputStream(),
+                uploadedFile.getContentType()
         );
 
         blobStore.put(coverBlob);

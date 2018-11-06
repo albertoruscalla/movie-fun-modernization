@@ -1,4 +1,4 @@
-package org.superbiz.moviefun;
+package org.superbiz.moviefun.cf;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

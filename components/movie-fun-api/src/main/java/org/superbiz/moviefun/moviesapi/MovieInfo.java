@@ -1,4 +1,4 @@
-package org.superbiz.moviefun.albums; /**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,55 +14,53 @@ package org.superbiz.moviefun.albums; /**
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.superbiz.moviefun.moviesapi;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity
-public class Album implements Serializable {
+public class MovieInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    private String artist;
+    private String director;
     private String title;
     private int year;
+    private String genre;
     private int rating;
 
-    public Album() {
+    public MovieInfo() {
     }
 
-    public Album(String artist, String title, int year, int rating) {
-        this.artist = artist;
+    public MovieInfo(String title, String director, String genre, int rating, int year) {
+        this.director = director;
         this.title = title;
         this.year = year;
+        this.genre = genre;
         this.rating = rating;
     }
 
-    public Long getId() {
+    public MovieInfo(String director, String title, int year) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public String getDirector() {
+        return director;
     }
 
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setDirector(String director) {
+        this.director = director;
     }
 
     public String getTitle() {
@@ -81,6 +79,14 @@ public class Album implements Serializable {
         this.year = year;
     }
 
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
     public int getRating() {
         return rating;
     }
@@ -89,30 +95,14 @@ public class Album implements Serializable {
         this.rating = rating;
     }
 
-    public boolean hasId() {
-        return id != null;
-    }
-
-    public boolean isEquivalent(Album other) {
-        if (year != other.year) return false;
-        if (!isEqual(title, other.title)) return false;
-        if (!isEqual(artist, other.artist)) return false;
-
-        return true;
-    }
-
-    private static <T> boolean isEqual(T one, T other) {
-        if (one != null ? !one.equals(other) : other != null) return false;
-        return true;
-    }
-
     @Override
     public String toString() {
-        return "Album{" +
+        return "MovieInfo{" +
                 "id=" + id +
-                ", artist='" + artist + '\'' +
+                ", director='" + director + '\'' +
                 ", title='" + title + '\'' +
                 ", year=" + year +
+                ", genre='" + genre + '\'' +
                 ", rating=" + rating +
                 '}';
     }
