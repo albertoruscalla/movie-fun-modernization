@@ -1,6 +1,7 @@
 package org.superbiz.moviefun;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestOperations;
@@ -15,6 +16,7 @@ public class ClientConfiguration {
     @Value("${movies.url}") String moviesUrl;
 
     @Bean
+    @ConditionalOnProperty(value = "application.oauth-enabled", havingValue = "false")
     public RestOperations restOperations() {
         return new RestTemplate();
     }
