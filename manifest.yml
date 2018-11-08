@@ -8,23 +8,24 @@ applications:
 - name: album-service
   path: applications/album-service/build/libs/album-service-1.1.0-SNAPSHOT.jar
   routes:
-    - route: album-service-{UNIQUE_IDENTIFIER}.apps.chicken.pal.pivotal.io
+    - route: album-service-sweet-kob.apps.pikes.pal.pivotal.io
   services:
-  - album-database
-  - moviefun-s3
+  - albums-db
+  - photo-storage
   env:
     GRANT_TYPE: client_credentials
 - name: movie-service
   path: applications/movie-service/build/libs/movie-service-1.1.0-SNAPSHOT.jar
   routes:
-    - route: movie-service-{UNIQUE_IDENTIFIER}.apps.chicken.pal.pivotal.io
+    - route: movie-service-bold-cat.apps.pikes.pal.pivotal.io
   services:
-  - movie-database
+  - movies-db
   env:
     GRANT_TYPE: client_credentials
 - name: movie-fun-app
   path: applications/movie-fun-app/build/libs/movie-fun-app-1.1.0-SNAPSHOT.war
   routes:
-    - route: movie-fun-app-{UNIQUE_IDENTIFIER}.apps.chicken.pal.pivotal.io
+    - route: moviefun-anxious-platypus.apps.pikes.pal.pivotal.io
   services:
-  - moviefun-s3
+  - photo-storage
+  - movie-fun-config-server
